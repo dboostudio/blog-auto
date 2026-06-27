@@ -14,24 +14,48 @@ const PEXELS_API_KEY = process.env.PEXELS_API_KEY || ''
 
 // 한국어 키워드 → 영어 검색어 매핑 (Pexels는 영어 검색이 결과가 많음)
 const KEYWORD_MAP = {
-  '김치찌개': 'korean stew kimchi',
-  '레시피': 'cooking food recipe',
+  '김치찌개': 'kimchi stew',
+  '레시피': 'korean food recipe',
   '요리': 'cooking kitchen',
+  '집밥레시피': 'home cooked korean food',
   '동물': 'animal',
   '호주': 'australia',
   '결혼': 'wedding',
   '여행': 'travel',
   '운동': 'workout fitness',
+  '홈트': 'home workout',
   '청소': 'cleaning home',
+  '곰팡이제거': 'mold cleaning bathroom',
   '캠핑': 'camping outdoor',
+  '수면': 'sleep bedroom',
+  '반려동물': 'pet dog',
+  '건강': 'healthy lifestyle',
 }
 
-function toSearchQuery(keywords) {
-  for (const kw of keywords) {
+// 카테고리/슬러그 접두사 기준 기본 검색어
+const CATEGORY_FALLBACK = { howto: 'lifestyle home', news: 'world news' }
+
+// 슬러그에서 영어 검색어 추출: "howto-kimchi-stew-1782..." → "kimchi stew"
+function queryFromSlug(slug) {
+  return slug
+    .replace(/^(howto|news)-/, '')
+    .replace(/-\d{10,}$/, '')      // 끝의 타임스탬프 제거
+    .replace(/-/g, ' ')
+    .trim()
+}
+
+function toSearchQuery(data, slug) {
+  // 1순위: 글이 명시한 영어 검색어
+  if (data.image_query) return data.image_query
+  // 2순위: 태그 매핑
+  for (const kw of data.tags || []) {
     if (KEYWORD_MAP[kw]) return KEYWORD_MAP[kw]
   }
-  // 매핑 없으면 첫 키워드 그대로 (Pexels가 일부 한글도 처리)
-  return keywords[0] || 'news'
+  // 3순위: 슬러그에서 추출한 영어 (대부분 여기서 잡힘)
+  const fromSlug = queryFromSlug(slug)
+  if (fromSlug && /[a-z]/i.test(fromSlug)) return fromSlug
+  // 4순위: 카테고리 기본값
+  return CATEGORY_FALLBACK[data.category] || 'lifestyle'
 }
 
 async function searchPexelsImage(query) {
@@ -68,12 +92,18 @@ async function injectImage(filepath) {
     return
   }
 
-  const keywords = data.product_keywords || data.tags || []
-  const query = toSearchQuery(keywords)
+  const slug = path.basename(filepath, '.mdx')
+  const query = toSearchQuery(data, slug)
 
-  const image = await searchPexelsImage(query)
+  // 1차 검색 → 결과 없으면 카테고리 기본값으로 폴백
+  let image = await searchPexelsImage(query)
   if (!image) {
-    console.log(`이미지 못 찾음: ${path.basename(filepath)} (검색어: ${query})`)
+    const fb = CATEGORY_FALLBACK[data.category] || 'lifestyle'
+    console.log(`검색어 "${query}" 결과 없음 → 폴백 "${fb}"`)
+    image = await searchPexelsImage(fb)
+  }
+  if (!image) {
+    console.log(`이미지 못 찾음: ${path.basename(filepath)}`)
     return
   }
 

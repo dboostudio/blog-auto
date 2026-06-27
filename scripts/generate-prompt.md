@@ -25,6 +25,7 @@ description: "검색결과에 노출될 한 줄 요약"
 tags: ["태그1", "태그2", "태그3"]
 category: "howto"    # 하우투면 "howto", 뉴스면 "news"
 product_keywords: ["쿠팡검색용 상품키워드1", "상품키워드2", "상품키워드3"]
+image_query: "english search terms for a cover photo"   # 커버 이미지용 영어 검색어 (2~4 단어, 예: "kimchi stew korean food")
 ---
 ```
 
