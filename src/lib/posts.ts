@@ -31,7 +31,8 @@ export function getAllPosts(): PostMeta[] {
 
   return files
     .map(filename => {
-      const slug = filename.replace('.mdx', '')
+      // macOS NFD 파일명 → NFC로 정규화해 URL/슬러그 일관성 유지
+      const slug = filename.replace('.mdx', '').normalize('NFC')
       const fullPath = path.join(postsDirectory, filename)
       const { data } = matter(fs.readFileSync(fullPath, 'utf8'))
       return { slug, ...data } as PostMeta
@@ -40,8 +41,14 @@ export function getAllPosts(): PostMeta[] {
 }
 
 export function getPostBySlug(slug: string) {
-  const fullPath = path.join(postsDirectory, `${slug}.mdx`)
+  const target = slug.normalize('NFC')
+  // 디스크 파일명이 NFD일 수 있어, 정규화 비교로 매칭
+  const files = fs.readdirSync(postsDirectory).filter(f => f.endsWith('.mdx'))
+  const filename = files.find(f => f.replace('.mdx', '').normalize('NFC') === target)
+  if (!filename) throw new Error(`Post not found: ${slug}`)
+
+  const fullPath = path.join(postsDirectory, filename)
   const raw = fs.readFileSync(fullPath, 'utf8')
   const { data, content } = matter(raw)
-  return { meta: { slug, ...data } as PostMeta, content }
+  return { meta: { slug: target, ...data } as PostMeta, content }
 }
