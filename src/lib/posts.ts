@@ -4,12 +4,17 @@ import matter from 'gray-matter'
 
 const postsDirectory = path.join(process.cwd(), 'posts')
 
+export type PostCategory = 'news' | 'howto'
+
 export interface PostMeta {
   slug: string
   title: string
   date: string
   description: string
   tags: string[]
+  category?: PostCategory
+  cover_image?: string
+  cover_image_credit?: string
   source_url?: string
   affiliate_products?: AffiliateProduct[]
 }

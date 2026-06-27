@@ -56,10 +56,15 @@ export default function Home() {
               <Link href={`/posts/${posts[0].slug}`} className="group block">
                 <div className="flex">
                   {/* 썸네일 영역 */}
-                  <div className="shrink-0 w-44 bg-gradient-to-br from-[#03c75a] to-[#02a94c] flex items-center justify-center text-6xl">
-                    {posts[0].tags?.[0] === '동물' ? '🐾' :
-                     posts[0].tags?.[0] === '사건사고' ? '🚨' :
-                     posts[0].tags?.[0] === '황당' ? '😱' : '🌍'}
+                  <div className="shrink-0 w-44 bg-gradient-to-br from-[#03c75a] to-[#02a94c] flex items-center justify-center text-6xl overflow-hidden">
+                    {posts[0].cover_image ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={posts[0].cover_image} alt={posts[0].title} className="w-full h-full object-cover" />
+                    ) : (
+                      posts[0].tags?.[0] === '동물' ? '🐾' :
+                      posts[0].tags?.[0] === '사건사고' ? '🚨' :
+                      posts[0].tags?.[0] === '황당' ? '😱' : '🌍'
+                    )}
                   </div>
                   <div className="flex-1 p-6">
                     <div className="flex items-center gap-2 mb-3">
@@ -86,12 +91,25 @@ export default function Home() {
             {posts.slice(1).map(post => (
               <Link key={post.slug} href={`/posts/${post.slug}`} className="group flex items-start gap-4 p-5 hover:bg-[#f8fdfa] transition-colors">
                 {/* 썸네일 자리 (없으면 태그 색상 블록) */}
-                <div className="shrink-0 w-24 h-20 rounded-md bg-gradient-to-br from-[#eafaf2] to-[#c8f2de] flex items-center justify-center text-3xl">
-                  {post.tags?.[0] === '동물' ? '🐾' :
-                   post.tags?.[0] === '사건사고' ? '🚨' :
-                   post.tags?.[0] === '황당' ? '😱' : '🌍'}
+                <div className="shrink-0 w-24 h-20 rounded-md bg-gradient-to-br from-[#eafaf2] to-[#c8f2de] flex items-center justify-center text-3xl overflow-hidden">
+                  {post.cover_image ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={post.cover_image} alt={post.title} className="w-full h-full object-cover" />
+                  ) : (
+                    post.category === 'howto' ? '📝' :
+                    post.tags?.[0] === '동물' ? '🐾' :
+                    post.tags?.[0] === '사건사고' ? '🚨' :
+                    post.tags?.[0] === '황당' ? '😱' : '🌍'
+                  )}
                 </div>
                 <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-1.5 mb-1">
+                    {post.category === 'howto' ? (
+                      <span className="text-[11px] bg-blue-50 text-blue-600 border border-blue-200 px-1.5 py-0.5 rounded font-semibold">꿀팁</span>
+                    ) : (
+                      <span className="text-[11px] bg-orange-50 text-orange-600 border border-orange-200 px-1.5 py-0.5 rounded font-semibold">이슈</span>
+                    )}
+                  </div>
                   <h3 className="text-lg font-bold text-gray-900 group-hover:text-[#03c75a] transition-colors line-clamp-2 leading-snug mb-1.5">
                     {post.title}
                   </h3>

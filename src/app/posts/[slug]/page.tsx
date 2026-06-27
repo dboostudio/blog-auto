@@ -61,6 +61,17 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
               <span>{formatDistanceToNow(new Date(meta.date), { addSuffix: true, locale: ko })}</span>
             </div>
 
+            {/* 커버 이미지 */}
+            {meta.cover_image && (
+              <figure className="mt-6 -mx-1">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={meta.cover_image} alt={meta.title} className="w-full rounded-lg object-cover max-h-[420px]" />
+                {meta.cover_image_credit && (
+                  <figcaption className="text-xs text-gray-400 mt-2 text-right">사진: {meta.cover_image_credit} / Pexels</figcaption>
+                )}
+              </figure>
+            )}
+
             {/* 본문 */}
             <div className="prose prose-gray max-w-none mt-6 prose-headings:font-bold prose-h2:text-lg prose-p:leading-8 prose-p:text-gray-700">
               <MDXRemote source={content} />
