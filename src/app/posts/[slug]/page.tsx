@@ -171,15 +171,20 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
             </p>
           </div>
 
-          {/* 관련 뉴스 */}
+          {/* 관련 글 */}
           {relatedPosts.length > 0 && (
             <div className="bg-white rounded p-5">
-              <h3 className="text-sm font-bold text-gray-800 mb-3 pb-2 border-b border-[#f0f0f0]">관련 뉴스</h3>
+              <h3 className="text-sm font-bold text-gray-800 mb-3 pb-2 border-b border-[#f0f0f0]">관련 글</h3>
               <ul className="divide-y divide-[#f5f5f5]">
                 {relatedPosts.map(p => (
                   <li key={p.slug}>
                     <Link href={`/posts/${p.slug}`} className="flex gap-3 py-3 group">
-                      <div className="shrink-0 w-16 h-12 rounded bg-[#f0faf5] flex items-center justify-center text-xl">🌍</div>
+                      <div className="shrink-0 w-16 h-12 rounded bg-[#f0faf5] flex items-center justify-center text-xl overflow-hidden">
+                        {p.cover_image ? (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img src={p.cover_image} alt={p.title} className="w-full h-full object-cover" />
+                        ) : (p.category === 'howto' ? '📝' : '🌍')}
+                      </div>
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-medium text-gray-800 group-hover:text-[#03c75a] line-clamp-2 leading-snug">{p.title}</p>
                         <p className="text-xs text-gray-400 mt-1">
@@ -198,7 +203,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
         <aside className="w-[260px] shrink-0 hidden lg:block">
           <div className="bg-white rounded sticky top-4">
             <div className="px-4 py-3 border-b border-[#f0f0f0]">
-              <h3 className="text-sm font-bold text-gray-800">많이 본 뉴스</h3>
+              <h3 className="text-sm font-bold text-gray-800">인기 글</h3>
             </div>
             <ul className="p-4 space-y-3">
               {getAllPosts().slice(0, 5).map((p, i) => (
