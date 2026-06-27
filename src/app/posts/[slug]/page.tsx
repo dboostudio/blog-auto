@@ -5,9 +5,50 @@ import { formatDistanceToNow, format } from 'date-fns'
 import { ko } from 'date-fns/locale'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
+import type { Metadata } from 'next'
+import { SITE } from '@/lib/site'
 
 export async function generateStaticParams() {
   return getAllPosts().map(p => ({ slug: p.slug }))
+}
+
+export async function generateMetadata(
+  { params }: { params: Promise<{ slug: string }> }
+): Promise<Metadata> {
+  const { slug } = await params
+  let meta
+  try {
+    meta = getPostBySlug(slug).meta
+  } catch {
+    return {}
+  }
+
+  const url = `${SITE.url}/posts/${slug}`
+  const images = meta.cover_image ? [meta.cover_image] : undefined
+
+  return {
+    title: meta.title,
+    description: meta.description,
+    keywords: meta.tags,
+    alternates: { canonical: `/posts/${slug}` },
+    openGraph: {
+      type: 'article',
+      title: meta.title,
+      description: meta.description,
+      url,
+      siteName: SITE.name,
+      locale: SITE.locale,
+      publishedTime: meta.date,
+      tags: meta.tags,
+      images,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: meta.title,
+      description: meta.description,
+      images,
+    },
+  }
 }
 
 export default async function PostPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -23,8 +64,27 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
   const { meta, content } = post
   const relatedPosts = getAllPosts().filter(p => p.slug !== slug).slice(0, 4)
 
+  // 구조화 데이터 (Google 리치 결과용 Article 스키마)
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: meta.title,
+    description: meta.description,
+    datePublished: meta.date,
+    dateModified: meta.date,
+    image: meta.cover_image ? [meta.cover_image] : undefined,
+    keywords: meta.tags?.join(', '),
+    author: { '@type': 'Organization', name: SITE.name },
+    publisher: { '@type': 'Organization', name: SITE.name },
+    mainEntityOfPage: { '@type': 'WebPage', '@id': `${SITE.url}/posts/${slug}` },
+  }
+
   return (
     <div className="min-h-screen bg-[#f4f4f4]">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       {/* 헤더 */}
       <header className="bg-white border-b border-[#e5e5e5]">
         <div className="max-w-[1100px] mx-auto px-4">
