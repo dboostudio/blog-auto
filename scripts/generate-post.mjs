@@ -41,12 +41,20 @@ async function generatePost(newsItem) {
 
   const response = await client.messages.create({
     model: 'claude-sonnet-4-6',
-    max_tokens: 2000,
+    max_tokens: 3000,
     system: SYSTEM_PROMPT,
     messages: [{ role: 'user', content: userMessage }]
   })
 
-  return response.content[0].text
+  return sanitizeMdx(response.content[0].text)
+}
+
+// Claude가 ```mdx ... ``` 코드펜스로 감싸는 경우 제거
+function sanitizeMdx(text) {
+  let t = text.trim()
+  t = t.replace(/^```(?:mdx|markdown|md)?\s*\n/, '')
+  t = t.replace(/\n```\s*$/, '')
+  return t.trim()
 }
 
 function mdxToSlug(title) {

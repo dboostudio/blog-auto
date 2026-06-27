@@ -57,12 +57,20 @@ product_keywords에는 쿠팡에서 검색 가능한 실제 상품 키워드를 
 
   const response = await client.messages.create({
     model: 'claude-sonnet-4-6',
-    max_tokens: 2500,
+    max_tokens: 4000,
     system: SYSTEM_PROMPT,
     messages: [{ role: 'user', content: userMessage }]
   })
 
-  return response.content[0].text
+  return sanitizeMdx(response.content[0].text)
+}
+
+// Claude가 ```mdx ... ``` 코드펜스로 감싸는 경우 제거
+function sanitizeMdx(text) {
+  let t = text.trim()
+  t = t.replace(/^```(?:mdx|markdown|md)?\s*\n/, '')
+  t = t.replace(/\n```\s*$/, '')
+  return t.trim()
 }
 
 function makeSlug(topic) {
