@@ -1,0 +1,7 @@
+<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+  <rect width="32" height="32" rx="7" fill="#03c75a"/>
+  <!-- 새싹 -->
+  <path d="M16 24V14" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/>
+  <path d="M16 16c0-3-2.4-5-5.4-5 0 3 2.4 5 5.4 5Z" fill="#fff"/>
+  <path d="M16 14c0-3 2.4-5 5.4-5 0 3-2.4 5-5.4 5Z" fill="#dff5e8"/>
+</svg>
