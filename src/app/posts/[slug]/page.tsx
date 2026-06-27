@@ -1,6 +1,6 @@
 import { getAllPosts, getPostBySlug } from '@/lib/posts'
 import { MDXRemote } from 'next-mdx-remote/rsc'
-import { format } from 'date-fns'
+import { formatDistanceToNow, format } from 'date-fns'
 import { ko } from 'date-fns/locale'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
@@ -20,57 +20,141 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
   }
 
   const { meta, content } = post
+  const relatedPosts = getAllPosts().filter(p => p.slug !== slug).slice(0, 4)
 
   return (
-    <main className="max-w-2xl mx-auto px-4 py-10">
-      <Link href="/" className="text-sm text-blue-500 hover:underline mb-6 inline-block">← 목록으로</Link>
-
-      <h1 className="text-3xl font-bold text-gray-900 mt-2 leading-snug">{meta.title}</h1>
-      <p className="text-gray-400 text-sm mt-2">
-        {format(new Date(meta.date), 'yyyy년 M월 d일', { locale: ko })}
-      </p>
-
-      {meta.tags?.length > 0 && (
-        <div className="flex gap-2 mt-3 flex-wrap">
-          {meta.tags.map(tag => (
-            <span key={tag} className="text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full">#{tag}</span>
-          ))}
-        </div>
-      )}
-
-      <article className="prose prose-gray mt-8 max-w-none">
-        <MDXRemote source={content} />
-      </article>
-
-      {/* 제휴 상품 */}
-      {meta.affiliate_products && meta.affiliate_products.length > 0 && (
-        <div className="mt-12 border-t pt-8">
-          <h3 className="text-lg font-semibold text-gray-700 mb-4">🛍️ 관련 상품</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {meta.affiliate_products.map((product, i) => (
-              <a
-                key={i}
-                href={product.url}
-                target="_blank"
-                rel="noopener noreferrer sponsored"
-                className="flex items-center gap-3 border rounded-lg p-3 hover:bg-gray-50 transition-colors"
-              >
-                {product.image && (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={product.image} alt={product.name} className="w-16 h-16 object-contain rounded" />
-                )}
-                <span className="text-sm font-medium text-gray-800">{product.name}</span>
-              </a>
-            ))}
+    <div className="min-h-screen bg-[#f4f4f4]">
+      {/* 헤더 */}
+      <header className="bg-white border-b border-[#e5e5e5]">
+        <div className="max-w-[1100px] mx-auto px-4">
+          <div className="flex items-center h-14 gap-3">
+            <Link href="/" className="text-[#03c75a] font-bold text-xl">🌍 세계황당뉴스</Link>
+            <span className="text-gray-300">›</span>
+            {meta.tags?.[0] && <span className="text-sm text-gray-500">{meta.tags[0]}</span>}
           </div>
         </div>
-      )}
+      </header>
 
-      {meta.source_url && (
-        <p className="text-xs text-gray-400 mt-8">
-          원문: <a href={meta.source_url} target="_blank" rel="noopener noreferrer" className="underline">{meta.source_url}</a>
-        </p>
-      )}
-    </main>
+      <main className="max-w-[1100px] mx-auto px-4 py-5 flex gap-4">
+        {/* 기사 본문 */}
+        <article className="flex-1 min-w-0">
+          <div className="bg-white rounded p-6 mb-3">
+            {/* 카테고리 + 제목 */}
+            <div className="flex items-center gap-2 mb-3">
+              {meta.tags?.map(tag => (
+                <span key={tag} className="text-xs bg-[#f0faf5] text-[#03c75a] border border-[#c8f2de] px-2 py-0.5 rounded-full">
+                  #{tag}
+                </span>
+              ))}
+            </div>
+
+            <h1 className="text-2xl font-bold text-gray-900 leading-snug mb-4">
+              {meta.title}
+            </h1>
+
+            {/* 메타 */}
+            <div className="flex items-center gap-3 pb-4 border-b border-[#f0f0f0] text-xs text-gray-400">
+              <span>세계황당뉴스</span>
+              <span>·</span>
+              <span>{format(new Date(meta.date), 'yyyy.MM.dd HH:mm')}</span>
+              <span>·</span>
+              <span>{formatDistanceToNow(new Date(meta.date), { addSuffix: true, locale: ko })}</span>
+            </div>
+
+            {/* 본문 */}
+            <div className="prose prose-gray max-w-none mt-6 prose-headings:font-bold prose-h2:text-lg prose-p:leading-8 prose-p:text-gray-700">
+              <MDXRemote source={content} />
+            </div>
+
+            {/* 원문 */}
+            {meta.source_url && (
+              <div className="mt-6 pt-4 border-t border-[#f0f0f0]">
+                <a href={meta.source_url} target="_blank" rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 text-xs text-gray-400 hover:text-[#03c75a]">
+                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                  </svg>
+                  원문 보기
+                </a>
+              </div>
+            )}
+          </div>
+
+          {/* 제휴 상품 */}
+          {meta.affiliate_products && meta.affiliate_products.length > 0 && (
+            <div className="bg-white rounded p-5 mb-3">
+              <h3 className="text-sm font-bold text-gray-700 mb-3 flex items-center gap-2">
+                <span className="bg-orange-100 text-orange-500 px-2 py-0.5 rounded text-xs font-semibold">AD</span>
+                이 뉴스와 관련된 상품
+              </h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {meta.affiliate_products.map((product, i) => (
+                  <a key={i} href={product.url} target="_blank" rel="noopener noreferrer sponsored"
+                    className="flex items-center gap-3 border border-[#e5e5e5] rounded p-3 hover:border-[#03c75a] hover:bg-[#f0faf5] transition-colors group">
+                    {product.image ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={product.image} alt={product.name} className="w-14 h-14 object-contain rounded" />
+                    ) : (
+                      <div className="w-14 h-14 bg-[#f5f5f5] rounded flex items-center justify-center text-xl">🛒</div>
+                    )}
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium text-gray-800 group-hover:text-[#03c75a] line-clamp-2">{product.name}</p>
+                      <p className="text-xs text-[#03c75a] mt-1">쿠팡에서 보기 →</p>
+                    </div>
+                  </a>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* 관련 뉴스 */}
+          {relatedPosts.length > 0 && (
+            <div className="bg-white rounded p-5">
+              <h3 className="text-sm font-bold text-gray-800 mb-3 pb-2 border-b border-[#f0f0f0]">관련 뉴스</h3>
+              <ul className="divide-y divide-[#f5f5f5]">
+                {relatedPosts.map(p => (
+                  <li key={p.slug}>
+                    <Link href={`/posts/${p.slug}`} className="flex gap-3 py-3 group">
+                      <div className="shrink-0 w-16 h-12 rounded bg-[#f0faf5] flex items-center justify-center text-xl">🌍</div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-gray-800 group-hover:text-[#03c75a] line-clamp-2 leading-snug">{p.title}</p>
+                        <p className="text-xs text-gray-400 mt-1">
+                          {formatDistanceToNow(new Date(p.date), { addSuffix: true, locale: ko })}
+                        </p>
+                      </div>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </article>
+
+        {/* 사이드바 */}
+        <aside className="w-[260px] shrink-0 hidden lg:block">
+          <div className="bg-white rounded sticky top-4">
+            <div className="px-4 py-3 border-b border-[#f0f0f0]">
+              <h3 className="text-sm font-bold text-gray-800">많이 본 뉴스</h3>
+            </div>
+            <ul className="p-4 space-y-3">
+              {getAllPosts().slice(0, 5).map((p, i) => (
+                <li key={p.slug}>
+                  <Link href={`/posts/${p.slug}`} className="flex gap-3 group">
+                    <span className={`text-lg font-bold shrink-0 ${
+                      i === 0 ? 'text-red-500' : i === 1 ? 'text-orange-400' : i === 2 ? 'text-yellow-500' : 'text-gray-300'
+                    }`}>{i + 1}</span>
+                    <span className="text-xs text-gray-700 group-hover:text-[#03c75a] line-clamp-2 leading-snug">{p.title}</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </aside>
+      </main>
+
+      <footer className="mt-8 py-6 text-center text-xs text-gray-400 border-t border-[#e5e5e5] bg-white">
+        © 2024 세계황당뉴스 · 해외 뉴스 큐레이션 서비스
+      </footer>
+    </div>
   )
 }
