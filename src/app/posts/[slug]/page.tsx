@@ -8,6 +8,9 @@ import Link from 'next/link'
 import type { Metadata } from 'next'
 import { SITE } from '@/lib/site'
 import { CoupangBanner } from '@/components/CoupangBanner'
+import { YouTube } from '@/components/mdx/YouTube'
+
+const mdxComponents = { YouTube }
 
 export async function generateStaticParams() {
   return getAllPosts().map(p => ({ slug: p.slug }))
@@ -138,6 +141,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
             <div className="prose prose-gray max-w-none mt-6 prose-headings:font-bold prose-h2:text-lg prose-p:leading-8 prose-p:text-gray-700">
               <MDXRemote
                 source={content}
+                components={mdxComponents}
                 options={{ mdxOptions: { remarkPlugins: [remarkGfm] } }}
               />
             </div>

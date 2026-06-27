@@ -34,6 +34,14 @@ git pull --quiet origin main || echo "git pull 경고 (계속 진행)"
 # 2. 발행 전 파일 수 기록
 BEFORE=$(find posts -name '*.mdx' | wc -l | tr -d ' ')
 
+# 2-1. 바이럴 소재(유튜브) 후보 수집 — YouTube API 키 있을 때만
+if [ -n "${YOUTUBE_API_KEY:-}" ]; then
+  echo "[바이럴] 유튜브 인기영상 후보 수집..."
+  node scripts/fetch-viral.mjs > scripts/viral-candidates.json 2>/dev/null || echo '[]' > scripts/viral-candidates.json
+else
+  echo '[]' > scripts/viral-candidates.json
+fi
+
 # 3. Claude가 글 생성 (글쓰기 도구만 허용, 권한 프롬프트 없이)
 echo "[Claude] 글 생성 중..."
 claude -p "$(cat scripts/generate-prompt.md)" \
