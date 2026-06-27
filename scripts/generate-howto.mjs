@@ -70,6 +70,9 @@ function sanitizeMdx(text) {
   let t = text.trim()
   t = t.replace(/^```(?:mdx|markdown|md)?\s*\n/, '')
   t = t.replace(/\n```\s*$/, '')
+  t = t.trim()
+  // frontmatter 직후의 본문 첫 H1(# 제목)은 페이지 상단 제목과 중복이라 제거
+  t = t.replace(/^(---\n[\s\S]*?\n---\n)\s*#\s+.+\n/, '$1\n')
   return t.trim()
 }
 
