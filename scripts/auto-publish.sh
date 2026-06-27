@@ -51,9 +51,8 @@ if [ "$NEW" -le 0 ]; then
   exit 0
 fi
 
-# 5. 쿠팡 제휴 링크 삽입
-echo "[제휴] 쿠팡 링크 삽입..."
-node scripts/inject-affiliate.mjs || echo "제휴 링크 삽입 경고 (계속)"
+# 5. (제휴 링크) 쿠팡 다이나믹 배너는 사이트 컴포넌트에 상시 노출되므로
+#    글마다 링크를 삽입할 필요가 없다. inject-affiliate는 더 이상 호출하지 않음.
 
 # 6. Pexels 이미지 삽입 (키 있을 때만)
 if [ -n "${PEXELS_API_KEY:-}" ]; then
