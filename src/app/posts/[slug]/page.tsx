@@ -7,6 +7,7 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import type { Metadata } from 'next'
 import { SITE } from '@/lib/site'
+import { CoupangBanner } from '@/components/CoupangBanner'
 
 export async function generateStaticParams() {
   return getAllPosts().map(p => ({ slug: p.slug }))
@@ -155,36 +156,20 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
             )}
           </div>
 
-          {/* 제휴 상품 */}
-          {meta.affiliate_products && meta.affiliate_products.length > 0 && (
-            <div className="bg-white rounded p-5 mb-3">
-              <h3 className="text-sm font-bold text-gray-700 mb-3 flex items-center gap-2">
-                <span className="bg-orange-100 text-orange-500 px-2 py-0.5 rounded text-xs font-semibold">AD</span>
-                이 뉴스와 관련된 상품
-              </h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {meta.affiliate_products.map((product, i) => (
-                  <a key={i} href={product.url} target="_blank" rel="noopener noreferrer sponsored"
-                    className="flex items-center gap-3 border border-[#e5e5e5] rounded p-3 hover:border-[#03c75a] hover:bg-[#f0faf5] transition-colors group">
-                    {product.image ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img src={product.image} alt={product.name} className="w-14 h-14 object-contain rounded" />
-                    ) : (
-                      <div className="w-14 h-14 bg-[#f5f5f5] rounded flex items-center justify-center text-xl">🛒</div>
-                    )}
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-gray-800 group-hover:text-[#03c75a] line-clamp-2">{product.name}</p>
-                      <p className="text-xs text-[#03c75a] mt-1">쿠팡에서 보기 →</p>
-                    </div>
-                  </a>
-                ))}
-              </div>
-              {/* 공정거래위원회 의무 고지 문구 */}
-              <p className="text-[11px] text-gray-400 mt-4 leading-relaxed">
-                이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.
-              </p>
+          {/* 쿠팡 파트너스 추천 상품 (다이나믹 배너) */}
+          <div className="bg-white rounded p-5 mb-3">
+            <h3 className="text-sm font-bold text-gray-700 mb-3 flex items-center gap-2">
+              <span className="bg-orange-100 text-orange-500 px-2 py-0.5 rounded text-xs font-semibold">AD</span>
+              오늘의 추천 상품
+            </h3>
+            <div className="flex justify-center">
+              <CoupangBanner width={680} height={140} />
             </div>
-          )}
+            {/* 공정거래위원회 의무 고지 문구 */}
+            <p className="text-[11px] text-gray-400 mt-4 leading-relaxed">
+              이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.
+            </p>
+          </div>
 
           {/* 관련 뉴스 */}
           {relatedPosts.length > 0 && (

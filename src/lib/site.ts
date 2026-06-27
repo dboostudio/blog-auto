@@ -8,3 +8,10 @@ export const SITE = {
   url: process.env.NEXT_PUBLIC_SITE_URL || 'https://blog-auto-phi.vercel.app',
   locale: 'ko_KR',
 }
+
+// 쿠팡 파트너스 다이나믹 배너 설정
+export const COUPANG = {
+  id: 1000897,
+  trackingCode: 'AF9076288',
+  template: 'carousel',
+}
