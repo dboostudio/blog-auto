@@ -34,7 +34,11 @@ git pull --quiet origin main || echo "git pull 경고 (계속 진행)"
 # 2. 발행 전 파일 수 기록
 BEFORE=$(find posts -name '*.mdx' | wc -l | tr -d ' ')
 
-# 2-1. 바이럴 소재(유튜브) 후보 수집 — YouTube API 키 있을 때만
+# 2-1. 트렌드/실용뉴스 소재 수집 (구글 트렌드 + 구글 뉴스, 키 불필요)
+echo "[트렌드] 인기검색어·실용뉴스 수집..."
+node scripts/fetch-trends.mjs > scripts/trend-candidates.json 2>/dev/null || echo '{"viral":[],"howto":[]}' > scripts/trend-candidates.json
+
+# 2-2. 바이럴 유튜브 후보 (YouTube API 키 있을 때만)
 if [ -n "${YOUTUBE_API_KEY:-}" ]; then
   echo "[바이럴] 유튜브 인기영상 후보 수집..."
   node scripts/fetch-viral.mjs > scripts/viral-candidates.json 2>/dev/null || echo '[]' > scripts/viral-candidates.json
@@ -42,11 +46,11 @@ else
   echo '[]' > scripts/viral-candidates.json
 fi
 
-# 3. Claude가 글 생성 (글쓰기 도구만 허용, 권한 프롬프트 없이)
+# 3. Claude가 글 생성 (웹 확인 허용 — 트렌드 사실 검증)
 echo "[Claude] 글 생성 중..."
 claude -p "$(cat scripts/generate-prompt.md)" \
   --permission-mode acceptEdits \
-  --allowedTools "Read Write Edit Glob Grep Bash" \
+  --allowedTools "Read Write Edit Glob Grep Bash WebFetch WebSearch" \
   2>&1 | tail -20
 
 # 4. 생성 결과 확인
