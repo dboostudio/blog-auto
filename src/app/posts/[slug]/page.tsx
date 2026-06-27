@@ -90,7 +90,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
       <header className="bg-white border-b border-[#e5e5e5]">
         <div className="max-w-[1100px] mx-auto px-4">
           <div className="flex items-center h-14 gap-3">
-            <Link href="/" className="text-[#03c75a] font-bold text-xl">🌍 세계황당뉴스</Link>
+            <Link href="/" className="text-[#03c75a] font-bold text-xl">🌱 모아봄</Link>
             <span className="text-gray-300">›</span>
             {meta.tags?.[0] && <span className="text-sm text-gray-500">{meta.tags[0]}</span>}
           </div>
@@ -116,7 +116,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
 
             {/* 메타 */}
             <div className="flex items-center gap-3 pb-4 border-b border-[#f0f0f0] text-xs text-gray-400">
-              <span>세계황당뉴스</span>
+              <span>모아봄</span>
               <span>·</span>
               <span>{format(new Date(meta.date), 'yyyy.MM.dd HH:mm')}</span>
               <span>·</span>
@@ -217,7 +217,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
       </main>
 
       <footer className="mt-8 py-6 text-center text-xs text-gray-400 border-t border-[#e5e5e5] bg-white">
-        © 2024 세계황당뉴스 · 해외 뉴스 큐레이션 서비스
+        © 2026 모아봄 · 꿀팁과 재미있는 이야기를 모아 봅니다
       </footer>
     </div>
   )

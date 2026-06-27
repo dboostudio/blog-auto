@@ -1,9 +1,9 @@
 // 사이트 전역 설정 (SEO 메타에 사용)
 export const SITE = {
-  name: '세계황당뉴스',
-  title: '세계황당뉴스 | 해외 토픽과 생활 꿀팁',
+  name: '모아봄',
+  title: '모아봄 | 꿀팁과 재미있는 이야기',
   description:
-    '믿기 힘든 해외 사건사고부터 바로 써먹는 생활 꿀팁·레시피까지. 매일 새로운 이야기를 전합니다.',
+    '알아두면 쓸모있는 생활 꿀팁·레시피부터 믿기 힘든 해외 토픽까지. 매일 새로운 이야기를 모아 봅니다.',
   // 배포 도메인
   url: process.env.NEXT_PUBLIC_SITE_URL || 'https://moabom.net',
   locale: 'ko_KR',

@@ -3,7 +3,7 @@ import { getAllPosts } from '@/lib/posts'
 import { formatDistanceToNow } from 'date-fns'
 import { ko } from 'date-fns/locale'
 
-const CATEGORIES = ['전체', '사건사고', '동물', '해외토픽', '황당', '미스터리']
+const CATEGORIES = ['전체', '생활꿀팁', '레시피', '건강', '해외토픽', '황당']
 
 export default function Home() {
   const posts = getAllPosts()
@@ -15,7 +15,7 @@ export default function Home() {
         <div className="max-w-[1100px] mx-auto px-4">
           <div className="flex items-center justify-between h-14">
             <Link href="/" className="text-[#03c75a] font-bold text-2xl tracking-tight">
-              🌍 세계황당뉴스
+              🌱 모아봄
             </Link>
             <div className="flex items-center gap-1 bg-[#f5f5f5] border border-[#e0e0e0] rounded-sm px-3 py-1.5 w-64">
               <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -176,7 +176,7 @@ export default function Home() {
 
       {/* 푸터 */}
       <footer className="mt-8 py-6 text-center text-xs text-gray-400 border-t border-[#e5e5e5] bg-white">
-        © 2024 세계황당뉴스 · 해외 뉴스 큐레이션 서비스
+        © 2026 모아봄 · 꿀팁과 재미있는 이야기를 모아 봅니다
       </footer>
     </div>
   )
