@@ -1,5 +1,6 @@
 import { getAllPosts, getPostBySlug } from '@/lib/posts'
 import { MDXRemote } from 'next-mdx-remote/rsc'
+import remarkGfm from 'remark-gfm'
 import { formatDistanceToNow, format } from 'date-fns'
 import { ko } from 'date-fns/locale'
 import { notFound } from 'next/navigation'
@@ -74,7 +75,10 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
 
             {/* 본문 */}
             <div className="prose prose-gray max-w-none mt-6 prose-headings:font-bold prose-h2:text-lg prose-p:leading-8 prose-p:text-gray-700">
-              <MDXRemote source={content} />
+              <MDXRemote
+                source={content}
+                options={{ mdxOptions: { remarkPlugins: [remarkGfm] } }}
+              />
             </div>
 
             {/* 원문 */}
