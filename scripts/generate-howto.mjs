@@ -13,14 +13,14 @@ const client = new Anthropic()
 
 // 하우투 주제 풀 — 구매 의도가 높은(상품 연결되는) 주제 위주
 const TOPIC_POOL = [
-  { topic: '김치찌개 맛있게 끓이는 법', category: '요리', products: ['김치찌개 밀키트', '돼지고기 앞다리살', '뚝배기'] },
-  { topic: '집에서 아메리카노 맛있게 내리는 법', category: '요리', products: ['홈카페 캡슐머신', '원두', '전동 그라인더'] },
-  { topic: '캠핑 초보가 꼭 챙겨야 할 준비물', category: '캠핑', products: ['캠핑 텐트', '캠핑 의자', '버너'] },
-  { topic: '자취방 곰팡이 제거하는 법', category: '청소', products: ['곰팡이 제거제', '제습기', '환풍기'] },
-  { topic: '홈트로 뱃살 빼는 법', category: '운동', products: ['요가매트', '아령 세트', '폼롤러'] },
-  { topic: '겨울철 실내 건조 해결하는 법', category: '생활', products: ['가습기', '미니 화분', '온습도계'] },
-  { topic: '강아지 분리불안 줄이는 법', category: '반려동물', products: ['노즈워크 매트', '자동 급식기', '강아지 장난감'] },
-  { topic: '잠 잘 오게 하는 법', category: '건강', products: ['수면 안대', '메모리폼 베개', '아로마 디퓨저'] },
+  { slug: 'kimchi-stew', topic: '김치찌개 맛있게 끓이는 법', category: '요리', products: ['김치찌개 밀키트', '돼지고기 앞다리살', '뚝배기'] },
+  { slug: 'home-americano', topic: '집에서 아메리카노 맛있게 내리는 법', category: '요리', products: ['홈카페 캡슐머신', '원두', '전동 그라인더'] },
+  { slug: 'camping-checklist', topic: '캠핑 초보가 꼭 챙겨야 할 준비물', category: '캠핑', products: ['캠핑 텐트', '캠핑 의자', '버너'] },
+  { slug: 'remove-mold', topic: '자취방 곰팡이 제거하는 법', category: '청소', products: ['곰팡이 제거제', '제습기', '환풍기'] },
+  { slug: 'home-workout-belly', topic: '홈트로 뱃살 빼는 법', category: '운동', products: ['요가매트', '아령 세트', '폼롤러'] },
+  { slug: 'winter-humidity', topic: '겨울철 실내 건조 해결하는 법', category: '생활', products: ['가습기', '미니 화분', '온습도계'] },
+  { slug: 'dog-separation-anxiety', topic: '강아지 분리불안 줄이는 법', category: '반려동물', products: ['노즈워크 매트', '자동 급식기', '강아지 장난감'] },
+  { slug: 'better-sleep', topic: '잠 잘 오게 하는 법', category: '건강', products: ['수면 안대', '메모리폼 베개', '아로마 디퓨저'] },
 ]
 
 const SYSTEM_PROMPT = `당신은 한국의 실용 정보 블로그 작가입니다.
@@ -73,13 +73,9 @@ function sanitizeMdx(text) {
   return t.trim()
 }
 
-function makeSlug(topic) {
-  return 'howto-' + topic
-    .replace(/[^\w\s가-힣]/g, '')
-    .trim()
-    .replace(/\s+/g, '-')
-    .toLowerCase()
-    .slice(0, 40) + '-' + Date.now()
+// 슬러그는 ASCII만 사용 (한글 URL은 Turbopack/Vercel 라우팅에서 깨짐)
+function makeSlug(item) {
+  return `howto-${item.slug}-${Date.now()}`
 }
 
 function savePost(mdx, slug) {
@@ -104,7 +100,7 @@ async function run(count = 3) {
     console.log(`\n생성 중: ${item.topic}`)
     try {
       const mdx = await generateHowto(item)
-      savePost(mdx, makeSlug(item.topic))
+      savePost(mdx, makeSlug(item))
       generated++
       await new Promise(r => setTimeout(r, 1000))
     } catch (e) {

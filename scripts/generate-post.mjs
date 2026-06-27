@@ -58,13 +58,17 @@ function sanitizeMdx(text) {
 }
 
 function mdxToSlug(title) {
-  // 제목에서 slug 생성
-  return title
-    .replace(/[^\w\s가-힣]/g, '')
+  // 슬러그는 ASCII만 (한글 URL은 라우팅에서 깨짐). 영문/숫자만 남기고 없으면 news로
+  const ascii = title
+    .replace(/[^\w\s]/g, '')
     .trim()
     .replace(/\s+/g, '-')
     .toLowerCase()
-    .slice(0, 50) + '-' + Date.now()
+    .replace(/[^a-z0-9-]/g, '')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '')
+    .slice(0, 40)
+  return `news-${ascii || 'item'}-${Date.now()}`
 }
 
 function extractFrontmatter(mdxContent) {
