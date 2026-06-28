@@ -3,7 +3,8 @@
  * MDX에서 <YouTube id="VIDEO_ID" /> 형태로 사용
  */
 export function YouTube({ id, title }: { id: string; title?: string }) {
-  if (!id) return null
+  // 유튜브 영상 ID 형식만 허용 (URL/쿼리 주입 방지)
+  if (!id || !/^[\w-]{11}$/.test(id)) return null
   return (
     <div className="my-6 relative w-full overflow-hidden rounded-lg" style={{ paddingTop: '56.25%' }}>
       <iframe

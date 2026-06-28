@@ -32,7 +32,7 @@ echo "=========================================="
 git pull --quiet origin main || echo "git pull 경고 (계속 진행)"
 
 # 2. 발행 전 파일 수 기록
-BEFORE=$(find posts -name '*.mdx' | wc -l | tr -d ' ')
+BEFORE=$(find posts -name '*.mdx' 2>/dev/null | wc -l | tr -d ' ')
 
 # 2-1. 트렌드/실용뉴스 소재 수집 (구글 트렌드 + 구글 뉴스, 키 불필요)
 echo "[트렌드] 인기검색어·실용뉴스 수집..."
@@ -54,7 +54,7 @@ claude -p "$(cat scripts/generate-prompt.md)" \
   2>&1 | tail -20
 
 # 4. 생성 결과 확인
-AFTER=$(find posts -name '*.mdx' | wc -l | tr -d ' ')
+AFTER=$(find posts -name '*.mdx' 2>/dev/null | wc -l | tr -d ' ')
 NEW=$((AFTER - BEFORE))
 echo "[결과] 새 글 ${NEW}개 생성 (이전 ${BEFORE} → 현재 ${AFTER})"
 
@@ -72,10 +72,20 @@ if [ -n "${PEXELS_API_KEY:-}" ]; then
   node scripts/inject-images.mjs || echo "이미지 삽입 경고 (계속)"
 fi
 
-# 7. 커밋 & 푸시
+# 7. 커밋 & 푸시 (변경 없으면 건너뜀, 원격 앞서면 재시도)
 echo "[git] 커밋 & 푸시..."
 git add posts/
+if git diff --cached --quiet; then
+  echo "커밋할 변경 없음 — 종료"
+  exit 0
+fi
 git commit -m "auto: $(date '+%Y-%m-%d %H:%M') 새 글 ${NEW}개 자동 발행" --quiet
-git push --quiet origin main
+
+# push 실패 시(원격이 앞섬) rebase 후 1회 재시도
+if ! git push --quiet origin main; then
+  echo "push 거부 — pull --rebase 후 재시도"
+  git pull --rebase --quiet origin main || true
+  git push --quiet origin main || echo "push 재시도 실패 (다음 cron에서 동기화됨)"
+fi
 
 echo "[$(date '+%Y-%m-%d %H:%M:%S')] 자동 발행 완료 — Vercel이 곧 배포합니다"

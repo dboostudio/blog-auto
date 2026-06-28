@@ -37,7 +37,7 @@ export function getAllPosts(): PostMeta[] {
       const { data } = matter(fs.readFileSync(fullPath, 'utf8'))
       return { slug, ...data } as PostMeta
     })
-    .sort((a, b) => (a.date > b.date ? -1 : 1))
+    .sort((a, b) => (b.date || '').localeCompare(a.date || ''))
 }
 
 export function getPostBySlug(slug: string) {

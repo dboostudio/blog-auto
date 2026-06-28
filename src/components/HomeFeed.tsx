@@ -53,9 +53,11 @@ export function HomeFeed({ posts }: { posts: PostMeta[] }) {
       <header className="bg-white border-b border-[#e5e5e5]">
         <div className="max-w-[1100px] mx-auto px-4">
           <div className="flex items-center justify-between h-14 gap-3">
-            <Link href="/" className="text-[#03c75a] font-bold text-2xl tracking-tight shrink-0">
-              🌱 모아봄
-            </Link>
+            <h1 className="shrink-0 m-0">
+              <Link href="/" className="text-[#03c75a] font-bold text-2xl tracking-tight">
+                🌱 모아봄
+              </Link>
+            </h1>
             <div className="flex items-center gap-1 bg-[#f5f5f5] border border-[#e0e0e0] rounded-full px-3 py-1.5 w-full max-w-xs focus-within:border-[#03c75a] transition-colors">
               <svg className="w-4 h-4 text-gray-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -63,7 +65,8 @@ export function HomeFeed({ posts }: { posts: PostMeta[] }) {
               <input
                 value={query}
                 onChange={e => setQuery(e.target.value)}
-                className="bg-transparent text-sm outline-none w-full text-gray-700 placeholder-gray-400"
+                aria-label="글 검색"
+                className="bg-transparent text-sm outline-none w-full text-gray-700 placeholder-gray-500"
                 placeholder="모아봄 검색"
               />
               {query && (

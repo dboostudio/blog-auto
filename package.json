@@ -6,10 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint",
-    "pipeline": "node scripts/run-pipeline.mjs",
-    "generate": "node scripts/generate-post.mjs",
-    "affiliate": "node scripts/inject-affiliate.mjs"
+    "lint": "eslint"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.106.0",

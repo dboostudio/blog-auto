@@ -21,11 +21,14 @@ export function CoupangBanner({
     tsource: '',
   })
 
+  // 인라인 스크립트 컨텍스트 조기 종료 방지
+  const safeConfig = config.replace(/<\//g, '<\\/')
+
   const srcDoc = `<!doctype html><html><head><meta charset="utf-8">
 <style>html,body{margin:0;padding:0;overflow:hidden}</style></head>
 <body>
 <script src="https://ads-partners.coupang.com/g.js"></script>
-<script>new PartnersCoupang.G(${config});</script>
+<script>new PartnersCoupang.G(${safeConfig});</script>
 </body></html>`
 
   return (

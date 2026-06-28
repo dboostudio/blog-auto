@@ -87,7 +87,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
     <div className="min-h-screen bg-[#f4f4f4]">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, '\\u003c') }}
       />
       {/* 헤더 */}
       <header className="bg-white border-b border-[#e5e5e5]">
@@ -118,7 +118,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
             </h1>
 
             {/* 메타 */}
-            <div className="flex items-center gap-3 pb-4 border-b border-[#f0f0f0] text-xs text-gray-400">
+            <div className="flex items-center gap-3 pb-4 border-b border-[#f0f0f0] text-xs text-gray-500">
               <span>모아봄</span>
               <span>·</span>
               <span>{format(new Date(meta.date), 'yyyy.MM.dd HH:mm')}</span>
