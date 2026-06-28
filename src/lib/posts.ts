@@ -38,7 +38,8 @@ export function getAllPosts(): PostMeta[] {
       const { data } = matter(fs.readFileSync(fullPath, 'utf8'))
       return { slug, ...data } as PostMeta
     })
-    .sort((a, b) => (b.date || '').localeCompare(a.date || ''))
+    // 실제 발행시각(published) 기준 최신순. 없으면 date 폴백.
+    .sort((a, b) => (b.published || b.date || '').localeCompare(a.published || a.date || ''))
 }
 
 export function getPostBySlug(slug: string) {
