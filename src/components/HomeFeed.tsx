@@ -9,11 +9,8 @@ import type { PostMeta } from '@/lib/posts'
 // 카테고리 → 매칭 키워드 (태그/제목에 포함되면 해당 카테고리로 분류)
 const CATEGORY_FILTERS: { label: string; match: (p: PostMeta) => boolean }[] = [
   { label: '전체', match: () => true },
-  { label: '생활꿀팁', match: p => p.category === 'howto' && hasAny(p, ['청소', '생활', '꿀팁', '곰팡이', '정리', '수납']) },
-  { label: '레시피', match: p => hasAny(p, ['레시피', '요리', '김치찌개', '집밥', '음식', '맛']) },
-  { label: '건강', match: p => hasAny(p, ['건강', '운동', '홈트', '수면', '다이어트', '뱃살']) },
-  { label: '해외토픽', match: p => p.category === 'news' || hasAny(p, ['해외토픽', '해외']) },
-  { label: '황당', match: p => hasAny(p, ['황당', '충격', '경악']) },
+  { label: '생활정보', match: p => p.category === 'howto' },
+  { label: '이슈·화제', match: p => p.category === 'news' },
 ]
 
 function hasAny(p: PostMeta, keywords: string[]) {
