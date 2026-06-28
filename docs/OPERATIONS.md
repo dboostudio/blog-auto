@@ -6,7 +6,7 @@
 
 ```
             ┌──────────── 서버 172.30.1.3 (상시 가동) ────────────┐
- cron 9·14·20시 → auto-publish.sh                                  │
+ cron 9·20시 → auto-publish.sh                                  │
    1. fetch-trends.mjs  (구글 트렌드 KR + 구글뉴스 RSS)            │
    2. fetch-viral.mjs   (YouTube 인기영상, 키 있을 때)            │
    3. 작가: claude -p (구독 인증, 무과금) → posts/*.mdx 생성       │
@@ -33,7 +33,7 @@
 - **Claude:** `@anthropic-ai/claude-code` 전역 설치. **구독 인증**(`~/.claude/.credentials.json`)이라 글 생성에 API 과금 없음. (setup-token은 redirect 에러 → `claude` 실행 후 `/login`으로 해결)
 - **git push 인증:** ed25519 배포키 `~/.ssh/blog_deploy`, repo의 `core.sshCommand`로 지정. GitHub repo에 deploy key(write) 등록. (RSA는 SHA-1 서명 거부됨 → ed25519)
 - **git user:** blog-auto-bot
-- **cron:** `0 9,14,20 * * *` → `scripts/auto-publish.sh`, 로그 `~/blog-auto/auto-publish.log`
+- **cron:** `0 9,20 * * *` → `scripts/auto-publish.sh`, 로그 `~/blog-auto/auto-publish.log`
 
 ## 환경변수 (`~/blog-auto/.env.local`, git 제외)
 
