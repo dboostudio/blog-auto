@@ -160,9 +160,9 @@ export function HomeFeed({ posts }: { posts: PostMeta[] }) {
                     {post.title}
                   </h3>
                   <p className="text-sm text-gray-600 line-clamp-2 mb-2 leading-relaxed">{post.description}</p>
-                  <div className="flex items-center gap-2">
+                  <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
                     {post.tags?.slice(0, 2).map(tag => (
-                      <span key={tag} className="text-xs text-[#03c75a] font-medium">#{tag}</span>
+                      <span key={tag} className="text-xs text-[#03c75a] font-medium whitespace-nowrap">#{tag}</span>
                     ))}
                     <span className="text-xs text-gray-300">·</span>
                     <span className="text-xs text-gray-500">
@@ -212,7 +212,7 @@ export function HomeFeed({ posts }: { posts: PostMeta[] }) {
                 <button
                   key={tag}
                   onClick={() => { setQuery(tag); setCat('전체') }}
-                  className="text-xs bg-[#f0faf5] text-[#03c75a] border border-[#c8f2de] px-2 py-1 rounded-full hover:bg-[#03c75a] hover:text-white transition-colors"
+                  className="text-xs bg-[#f0faf5] text-[#03c75a] border border-[#c8f2de] px-2 py-1 rounded-full whitespace-nowrap hover:bg-[#03c75a] hover:text-white transition-colors"
                 >
                   #{tag}
                 </button>

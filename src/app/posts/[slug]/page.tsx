@@ -105,9 +105,9 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
         <article className="flex-1 min-w-0">
           <div className="bg-white rounded p-6 mb-3">
             {/* 카테고리 + 제목 */}
-            <div className="flex items-center gap-2 mb-3">
+            <div className="flex flex-wrap items-center gap-2 mb-3">
               {meta.tags?.map(tag => (
-                <span key={tag} className="text-xs bg-[#f0faf5] text-[#03c75a] border border-[#c8f2de] px-2 py-0.5 rounded-full">
+                <span key={tag} className="text-xs bg-[#f0faf5] text-[#03c75a] border border-[#c8f2de] px-2 py-0.5 rounded-full whitespace-nowrap shrink-0">
                   #{tag}
                 </span>
               ))}
