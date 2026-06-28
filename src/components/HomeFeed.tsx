@@ -199,15 +199,15 @@ export function HomeFeed({ posts }: { posts: PostMeta[] }) {
             <div className="px-4 py-3 border-b-2 border-[#03c75a]">
               <h3 className="text-base font-bold text-gray-900">최신 글</h3>
             </div>
-            <ul className="p-4 space-y-3.5">
-              {posts.slice(0, 5).map((post, i) => (
-                <li key={post.slug}>
-                  <Link href={`/posts/${post.slug}`} className="flex gap-3 group items-start">
-                    <span className={`text-lg font-bold shrink-0 leading-snug ${
-                      i === 0 ? 'text-red-500' : i === 1 ? 'text-orange-500' : i === 2 ? 'text-[#03c75a]' : 'text-gray-400'
-                    }`}>{i + 1}</span>
+            <ul className="p-4 divide-y divide-[#f0f0f0]">
+              {posts.slice(0, 5).map(post => (
+                <li key={post.slug} className="py-2.5 first:pt-0 last:pb-0">
+                  <Link href={`/posts/${post.slug}`} className="group block">
                     <span className="text-sm text-gray-700 group-hover:text-[#03c75a] line-clamp-2 leading-snug font-medium">
                       {post.title}
+                    </span>
+                    <span className="block text-xs text-gray-400 mt-1">
+                      {formatDistanceToNow(new Date(postTime(post)), { addSuffix: true, locale: ko })}
                     </span>
                   </Link>
                 </li>

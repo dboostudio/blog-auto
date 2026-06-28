@@ -209,14 +209,14 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
             <div className="px-4 py-3 border-b border-[#f0f0f0]">
               <h3 className="text-sm font-bold text-gray-800">최신 글</h3>
             </div>
-            <ul className="p-4 space-y-3">
-              {getAllPosts().slice(0, 5).map((p, i) => (
-                <li key={p.slug}>
-                  <Link href={`/posts/${p.slug}`} className="flex gap-3 group">
-                    <span className={`text-lg font-bold shrink-0 ${
-                      i === 0 ? 'text-red-500' : i === 1 ? 'text-orange-400' : i === 2 ? 'text-yellow-500' : 'text-gray-300'
-                    }`}>{i + 1}</span>
-                    <span className="text-xs text-gray-700 group-hover:text-[#03c75a] line-clamp-2 leading-snug">{p.title}</span>
+            <ul className="p-4 divide-y divide-[#f0f0f0]">
+              {getAllPosts().filter(p => p.slug !== slug).slice(0, 5).map(p => (
+                <li key={p.slug} className="py-2.5 first:pt-0 last:pb-0">
+                  <Link href={`/posts/${p.slug}`} className="group block">
+                    <span className="text-xs text-gray-700 group-hover:text-[#03c75a] line-clamp-2 leading-snug font-medium">{p.title}</span>
+                    <span className="block text-[11px] text-gray-400 mt-1">
+                      {formatDistanceToNow(new Date(p.published || p.date), { addSuffix: true, locale: ko })}
+                    </span>
                   </Link>
                 </li>
               ))}
