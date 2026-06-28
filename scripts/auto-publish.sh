@@ -63,6 +63,27 @@ if [ "$NEW" -le 0 ]; then
   exit 0
 fi
 
+# 4-1. 🔴 레드팀 검수 (발행 전 사실검증 — 위험 글 차단/수정)
+NEWFILES=$(git ls-files --others --exclude-standard posts/ | grep '\.mdx$' || true)
+if [ -n "$NEWFILES" ]; then
+  echo "[검수] 레드팀 팩트체크 중..."
+  claude -p "$(cat scripts/review-prompt.md)
+
+## 이번에 검수할 새 글 파일 목록
+$NEWFILES" \
+    --permission-mode acceptEdits \
+    --allowedTools "Read Edit Bash Glob Grep WebFetch WebSearch" \
+    2>&1 | tail -15
+fi
+
+# 4-2. 검수 후 남은 새 글 수 재확인 (KILL된 글 반영)
+NEW=$(git ls-files --others --exclude-standard posts/ | grep -c '\.mdx$' || true)
+echo "[검수 후] 발행 대상 새 글 ${NEW}개"
+if [ "$NEW" -le 0 ]; then
+  echo "검수 통과 글이 없어 종료합니다."
+  exit 0
+fi
+
 # 5. (제휴 링크) 쿠팡 다이나믹 배너는 사이트 컴포넌트에 상시 노출되므로
 #    글마다 링크를 삽입할 필요가 없다. inject-affiliate는 더 이상 호출하지 않음.
 
