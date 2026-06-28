@@ -10,6 +10,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.8,
   }))
 
+  const staticPages = ['/about', '/contact', '/privacy'].map(path => ({
+    url: `${SITE.url}${path}`,
+    changeFrequency: 'monthly' as const,
+    priority: 0.3,
+  }))
+
   return [
     {
       url: SITE.url,
@@ -17,6 +23,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'daily' as const,
       priority: 1,
     },
+    ...staticPages,
     ...posts,
   ]
 }
