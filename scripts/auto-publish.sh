@@ -84,10 +84,15 @@ if [ "$NEW" -le 0 ]; then
   exit 0
 fi
 
-# 4-3. 발행 시각 기록 — 새 글 frontmatter에 published(UTC ISO) 삽입
-NOW_ISO=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+# 4-3. 발행 시각 기록 — 새 글마다 30초씩 다른 published(KST) 삽입 (동점 정렬 방지)
+BASE=$(date +%s)
+i=0
 for f in $(git ls-files --others --exclude-standard posts/ | grep '\.mdx$'); do
-  grep -q '^published:' "$f" || perl -0pi -e "s/^(date: .*\n)/\$1published: \"$NOW_ISO\"\n/m" "$f"
+  if ! grep -q '^published:' "$f"; then
+    TS=$(TZ=Asia/Seoul date -d "@$((BASE - i*30))" +%Y-%m-%dT%H:%M:%S+09:00)
+    perl -0pi -e "s/^(date: .*\n)/\$1published: \"$TS\"\n/m" "$f"
+    i=$((i+1))
+  fi
 done
 
 # 5. (제휴 링크) 쿠팡 다이나믹 배너는 사이트 컴포넌트에 상시 노출되므로
