@@ -21,7 +21,7 @@ export default function ContactPage() {
 
       <h2>이메일</h2>
       <p>
-        <a href="mailto:dboo.studio@gmail.com">dboo.studio@gmail.com</a>
+        <a href="mailto:moabom.blog@gmail.com">moabom.blog@gmail.com</a>
       </p>
       <p>보내주신 메일은 확인 후 순차적으로 답변드립니다.</p>
     </PageShell>

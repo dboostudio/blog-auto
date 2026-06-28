@@ -57,7 +57,7 @@ export default function PrivacyPage() {
 
       <h2>5. 문의</h2>
       <p>
-        개인정보 관련 문의는 <a href="mailto:dboo.studio@gmail.com">dboo.studio@gmail.com</a> 으로 연락해 주세요.
+        개인정보 관련 문의는 <a href="mailto:moabom.blog@gmail.com">moabom.blog@gmail.com</a> 으로 연락해 주세요.
       </p>
     </PageShell>
   )
