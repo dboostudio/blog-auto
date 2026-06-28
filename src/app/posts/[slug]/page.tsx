@@ -42,7 +42,7 @@ export async function generateMetadata(
       url,
       siteName: SITE.name,
       locale: SITE.locale,
-      publishedTime: meta.date,
+      publishedTime: meta.published || meta.date,
       tags: meta.tags,
       images,
     },
@@ -74,8 +74,8 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
     '@type': 'Article',
     headline: meta.title,
     description: meta.description,
-    datePublished: meta.date,
-    dateModified: meta.date,
+    datePublished: meta.published || meta.date,
+    dateModified: meta.published || meta.date,
     image: meta.cover_image ? [meta.cover_image] : undefined,
     keywords: meta.tags?.join(', '),
     author: { '@type': 'Organization', name: SITE.name },
@@ -121,9 +121,9 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
             <div className="flex items-center gap-3 pb-4 border-b border-[#f0f0f0] text-xs text-gray-500">
               <span>모아봄</span>
               <span>·</span>
-              <span>{format(new Date(meta.date), 'yyyy.MM.dd HH:mm')}</span>
+              <span>{format(new Date(meta.published || meta.date), 'yyyy.MM.dd HH:mm')}</span>
               <span>·</span>
-              <span>{formatDistanceToNow(new Date(meta.date), { addSuffix: true, locale: ko })}</span>
+              <span>{formatDistanceToNow(new Date(meta.published || meta.date), { addSuffix: true, locale: ko })}</span>
             </div>
 
             {/* 커버 이미지 */}
@@ -192,7 +192,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-medium text-gray-800 group-hover:text-[#03c75a] line-clamp-2 leading-snug">{p.title}</p>
                         <p className="text-xs text-gray-400 mt-1">
-                          {formatDistanceToNow(new Date(p.date), { addSuffix: true, locale: ko })}
+                          {formatDistanceToNow(new Date(p.published || p.date), { addSuffix: true, locale: ko })}
                         </p>
                       </div>
                     </Link>
@@ -207,7 +207,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
         <aside className="w-[260px] shrink-0 hidden lg:block">
           <div className="bg-white rounded sticky top-4">
             <div className="px-4 py-3 border-b border-[#f0f0f0]">
-              <h3 className="text-sm font-bold text-gray-800">인기 글</h3>
+              <h3 className="text-sm font-bold text-gray-800">최신 글</h3>
             </div>
             <ul className="p-4 space-y-3">
               {getAllPosts().slice(0, 5).map((p, i) => (

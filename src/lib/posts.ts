@@ -10,6 +10,7 @@ export interface PostMeta {
   slug: string
   title: string
   date: string
+  published?: string   // 실제 발행 ISO 타임스탬프 (정확한 "N시간 전"용)
   description: string
   tags: string[]
   category?: PostCategory

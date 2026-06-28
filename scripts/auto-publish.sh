@@ -84,6 +84,12 @@ if [ "$NEW" -le 0 ]; then
   exit 0
 fi
 
+# 4-3. 발행 시각 기록 — 새 글 frontmatter에 published(UTC ISO) 삽입
+NOW_ISO=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+for f in $(git ls-files --others --exclude-standard posts/ | grep '\.mdx$'); do
+  grep -q '^published:' "$f" || perl -0pi -e "s/^(date: .*\n)/\$1published: \"$NOW_ISO\"\n/m" "$f"
+done
+
 # 5. (제휴 링크) 쿠팡 다이나믹 배너는 사이트 컴포넌트에 상시 노출되므로
 #    글마다 링크를 삽입할 필요가 없다. inject-affiliate는 더 이상 호출하지 않음.
 

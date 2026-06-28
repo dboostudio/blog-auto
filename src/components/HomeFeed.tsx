@@ -21,6 +21,16 @@ function hasAny(p: PostMeta, keywords: string[]) {
   return keywords.some(k => hay.includes(k))
 }
 
+// 표시·정렬용 시각: 실제 발행시각(published) 우선, 없으면 date
+function postTime(p: PostMeta) {
+  return p.published || p.date
+}
+// 최근 48시간 이내면 HOT
+function isHot(p: PostMeta) {
+  const t = new Date(postTime(p)).getTime()
+  return Number.isFinite(t) && Date.now() - t < 48 * 60 * 60 * 1000
+}
+
 function thumbEmoji(p: PostMeta) {
   if (p.category === 'howto') return '📝'
   if (p.tags?.[0] === '동물') return '🐾'
@@ -123,7 +133,9 @@ export function HomeFeed({ posts }: { posts: PostMeta[] }) {
                   </div>
                   <div className="flex-1 p-5 sm:p-6">
                     <div className="flex items-center gap-2 mb-3">
-                      <span className="text-xs bg-red-500 text-white px-2 py-1 rounded font-bold tracking-wide">HOT</span>
+                      {isHot(headline) && (
+                        <span className="text-xs bg-red-500 text-white px-2 py-1 rounded font-bold tracking-wide">HOT</span>
+                      )}
                       {headline.tags?.[0] && (
                         <span className="text-sm text-[#03c75a] font-semibold">{headline.tags[0]}</span>
                       )}
@@ -133,7 +145,7 @@ export function HomeFeed({ posts }: { posts: PostMeta[] }) {
                     </h2>
                     <p className="text-gray-600 text-[15px] leading-relaxed line-clamp-2 mb-4">{headline.description}</p>
                     <span className="text-sm text-gray-500 font-medium">
-                      {formatDistanceToNow(new Date(headline.date), { addSuffix: true, locale: ko })}
+                      {formatDistanceToNow(new Date(postTime(headline)), { addSuffix: true, locale: ko })}
                     </span>
                   </div>
                 </div>
@@ -169,7 +181,7 @@ export function HomeFeed({ posts }: { posts: PostMeta[] }) {
                     ))}
                     <span className="text-xs text-gray-300">·</span>
                     <span className="text-xs text-gray-500">
-                      {formatDistanceToNow(new Date(post.date), { addSuffix: true, locale: ko })}
+                      {formatDistanceToNow(new Date(postTime(post)), { addSuffix: true, locale: ko })}
                     </span>
                   </div>
                 </div>
@@ -188,7 +200,7 @@ export function HomeFeed({ posts }: { posts: PostMeta[] }) {
         <aside className="w-[280px] shrink-0 hidden lg:block">
           <div className="bg-white rounded-lg mb-3 shadow-sm border border-[#e8e8e8]">
             <div className="px-4 py-3 border-b-2 border-[#03c75a]">
-              <h3 className="text-base font-bold text-gray-900">인기 글</h3>
+              <h3 className="text-base font-bold text-gray-900">최신 글</h3>
             </div>
             <ul className="p-4 space-y-3.5">
               {posts.slice(0, 5).map((post, i) => (
