@@ -21,9 +21,10 @@
 
 ## 슬러그 규칙
 - **반드시 ASCII(영문/숫자/하이픈)만**. 한글 금지.
-- 바이럴: `viral-<영문주제>-<유닉스타임스탬프>.mdx`
-- how-to: `howto-<영문주제>-<유닉스타임스탬프>.mdx`
-- 타임스탬프는 파일마다 다르게.
+- **prefix(viral-/howto-/news-)와 타임스탬프 없이, 주제 키워드만**으로 깔끔하게: `<영문주제-키워드>.mdx`
+  - 예: `hong-myungbo-resign.mdx`, `energy-voucher-2026.mdx`, `gta6-price-release.mdx`
+- 2~5단어 정도로 핵심 키워드를 담아라(SEO). 바이럴/howto 구분은 파일명이 아니라 frontmatter `category`로 한다.
+- `posts/`에 **같은 이름 파일이 이미 있으면** 구별되는 키워드를 1개 덧붙여라(중복 방지).
 
 ## frontmatter 형식
 ```

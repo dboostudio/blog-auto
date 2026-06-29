@@ -35,11 +35,12 @@ const KEYWORD_MAP = {
 // 카테고리/슬러그 접두사 기준 기본 검색어
 const CATEGORY_FALLBACK = { howto: 'lifestyle home', news: 'world news' }
 
-// 슬러그에서 영어 검색어 추출: "howto-kimchi-stew-1782..." → "kimchi stew"
+// 슬러그에서 영어 검색어 추출: "energy-voucher-2026" → "energy voucher 2026"
+// (구 형식 "howto-...-1782..." 도 호환)
 function queryFromSlug(slug) {
   return slug
-    .replace(/^(howto|news)-/, '')
-    .replace(/-\d{10,}$/, '')      // 끝의 타임스탬프 제거
+    .replace(/^(viral|howto|news)-/, '')   // 구 prefix 호환
+    .replace(/-\d{10,}$/, '')              // 구 타임스탬프 호환
     .replace(/-/g, ' ')
     .trim()
 }
