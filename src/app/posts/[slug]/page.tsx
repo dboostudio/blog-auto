@@ -1,4 +1,4 @@
-import { getAllPosts, getPostBySlug } from '@/lib/posts'
+import { getAllPosts, getPostBySlug, getRelatedPosts } from '@/lib/posts'
 import { MDXRemote } from 'next-mdx-remote/rsc'
 import remarkGfm from 'remark-gfm'
 import { formatDistanceToNow, format } from 'date-fns'
@@ -11,6 +11,20 @@ import { CoupangBanner } from '@/components/CoupangBanner'
 import { YouTube } from '@/components/mdx/YouTube'
 
 const mdxComponents = { YouTube }
+
+// MDX 본문에서 FAQ(Q/A) 추출 → FAQPage 구조화데이터용
+function extractFaqs(content: string): { q: string; a: string }[] {
+  const faqs: { q: string; a: string }[] = []
+  // "**Q. 질문**" 다음 "A. 답변" 패턴 (Q/A 사이 빈 줄 허용)
+  const re = /\*\*Q\.\s*([^*]+?)\*\*\s*\n+A\.\s*([\s\S]+?)(?=\n\s*\n\s*\*\*Q\.|\n\s*\n\s*#|\n\s*\n\s*>|\s*$)/g
+  let m
+  while ((m = re.exec(content)) !== null) {
+    const q = m[1].trim().replace(/\s+/g, ' ')
+    const a = m[2].trim().replace(/\*\*/g, '').replace(/\s+/g, ' ')
+    if (q && a) faqs.push({ q, a })
+  }
+  return faqs
+}
 
 export async function generateStaticParams() {
   return getAllPosts().map(p => ({ slug: p.slug }))
@@ -66,10 +80,12 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
   }
 
   const { meta, content } = post
-  const relatedPosts = getAllPosts().filter(p => p.slug !== slug).slice(0, 4)
+  const relatedPosts = getRelatedPosts(slug, 4)
+  const catLabel = meta.category === 'howto' ? '생활정보' : '이슈·화제'
+  const faqs = extractFaqs(content)
 
-  // 구조화 데이터 (Google 리치 결과용 Article 스키마)
-  const jsonLd = {
+  // 구조화 데이터 (Google 리치 결과용)
+  const articleLd = {
     '@context': 'https://schema.org',
     '@type': 'Article',
     headline: meta.title,
@@ -83,11 +99,35 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
     mainEntityOfPage: { '@type': 'WebPage', '@id': `${SITE.url}/posts/${slug}` },
   }
 
+  const breadcrumbLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: '홈', item: SITE.url },
+      { '@type': 'ListItem', position: 2, name: catLabel, item: `${SITE.url}/?cat=${meta.category}` },
+      { '@type': 'ListItem', position: 3, name: meta.title, item: `${SITE.url}/posts/${slug}` },
+    ],
+  }
+
+  const faqLd = faqs.length
+    ? {
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        mainEntity: faqs.map(f => ({
+          '@type': 'Question',
+          name: f.q,
+          acceptedAnswer: { '@type': 'Answer', text: f.a },
+        })),
+      }
+    : null
+
+  const jsonLdAll = [articleLd, breadcrumbLd, faqLd].filter(Boolean)
+
   return (
     <div className="min-h-screen bg-[#f4f4f4]">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, '\\u003c') }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdAll).replace(/</g, '\\u003c') }}
       />
       {/* 헤더 */}
       <header className="bg-white border-b border-[#e5e5e5]">
