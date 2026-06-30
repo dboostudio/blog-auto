@@ -42,6 +42,28 @@ export function getAllPosts(): PostMeta[] {
     .sort((a, b) => (b.published || b.date || '').localeCompare(a.published || a.date || ''))
 }
 
+/**
+ * 관련 글: 공유 태그 수 + 같은 카테고리로 점수화해 가장 관련 높은 글 우선.
+ * 매칭이 부족하면 최신 글로 채운다.
+ */
+export function getRelatedPosts(slug: string, limit = 4): PostMeta[] {
+  const all = getAllPosts()
+  const current = all.find(p => p.slug === slug)
+  if (!current) return all.filter(p => p.slug !== slug).slice(0, limit)
+
+  const curTags = new Set(current.tags || [])
+  const scored = all
+    .filter(p => p.slug !== slug)
+    .map(p => {
+      const shared = (p.tags || []).filter(t => curTags.has(t)).length
+      const sameCat = p.category === current.category ? 0.5 : 0
+      return { p, score: shared * 2 + sameCat }
+    })
+    .sort((a, b) => b.score - a.score || (b.p.published || b.p.date || '').localeCompare(a.p.published || a.p.date || ''))
+
+  return scored.slice(0, limit).map(s => s.p)
+}
+
 export function getPostBySlug(slug: string) {
   const target = slug.normalize('NFC')
   // 디스크 파일명이 NFD일 수 있어, 정규화 비교로 매칭
