@@ -10,7 +10,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.8,
   }))
 
-  const staticPages = ['/about', '/contact', '/privacy'].map(path => ({
+  const staticPages = ['/about', '/contact', '/privacy', '/terms'].map(path => ({
     url: `${SITE.url}${path}`,
     changeFrequency: 'monthly' as const,
     priority: 0.3,

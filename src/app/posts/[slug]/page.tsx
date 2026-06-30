@@ -172,7 +172,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={meta.cover_image} alt={meta.title} className="w-full rounded-lg object-cover max-h-[420px]" />
                 {meta.cover_image_credit && (
-                  <figcaption className="text-xs text-gray-400 mt-2 text-right">사진: {meta.cover_image_credit} / Pexels</figcaption>
+                  <figcaption className="text-xs text-gray-500 mt-2 text-right">사진: {meta.cover_image_credit} / Pexels</figcaption>
                 )}
               </figure>
             )}
@@ -270,6 +270,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
           <Link href="/about" className="hover:text-[#03c75a]">소개</Link>
           <Link href="/contact" className="hover:text-[#03c75a]">문의</Link>
           <Link href="/privacy" className="hover:text-[#03c75a]">개인정보처리방침</Link>
+          <Link href="/terms" className="hover:text-[#03c75a]">이용약관</Link>
         </div>
         © 2026 모아봄 · 꿀팁과 재미있는 이야기를 모아 봅니다
       </footer>

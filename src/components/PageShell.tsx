@@ -26,6 +26,7 @@ export function PageShell({ title, children }: { title: string; children: React.
           <Link href="/about" className="hover:text-[#03c75a]">소개</Link>
           <Link href="/contact" className="hover:text-[#03c75a]">문의</Link>
           <Link href="/privacy" className="hover:text-[#03c75a]">개인정보처리방침</Link>
+          <Link href="/terms" className="hover:text-[#03c75a]">이용약관</Link>
         </div>
         © 2026 모아봄 · 꿀팁과 재미있는 이야기를 모아 봅니다
       </footer>
