@@ -4,7 +4,7 @@ import matter from 'gray-matter'
 
 const postsDirectory = path.join(process.cwd(), 'posts')
 
-export type PostCategory = 'news' | 'howto'
+export type PostCategory = 'news' | 'howto' | 'econ'
 
 export interface PostMeta {
   slug: string

@@ -81,7 +81,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
 
   const { meta, content } = post
   const relatedPosts = getRelatedPosts(slug, 4)
-  const catLabel = meta.category === 'howto' ? '생활정보' : '이슈·화제'
+  const catLabel = meta.category === 'howto' ? '생활정보' : meta.category === 'econ' ? '경제' : '이슈·화제'
   const faqs = extractFaqs(content)
 
   // 구조화 데이터 (Google 리치 결과용)
