@@ -10,13 +10,9 @@ import type { PostMeta } from '@/lib/posts'
 const CATEGORY_FILTERS: { label: string; match: (p: PostMeta) => boolean }[] = [
   { label: '전체', match: () => true },
   { label: '생활정보', match: p => p.category === 'howto' },
+  { label: '경제', match: p => p.category === 'econ' },
   { label: '이슈·화제', match: p => p.category === 'news' },
 ]
-
-function hasAny(p: PostMeta, keywords: string[]) {
-  const hay = [p.title, ...(p.tags || [])].join(' ')
-  return keywords.some(k => hay.includes(k))
-}
 
 // 표시·정렬용 시각: 실제 발행시각(published) 우선, 없으면 date
 function postTime(p: PostMeta) {
@@ -30,6 +26,7 @@ function isHot(p: PostMeta) {
 
 function thumbEmoji(p: PostMeta) {
   if (p.category === 'howto') return '📝'
+  if (p.category === 'econ') return '📈'
   if (p.tags?.[0] === '동물') return '🐾'
   if (p.tags?.[0] === '황당') return '😱'
   return '🌍'
@@ -164,6 +161,8 @@ export function HomeFeed({ posts }: { posts: PostMeta[] }) {
                   <div className="flex items-center gap-1.5 mb-1">
                     {post.category === 'howto' ? (
                       <span className="text-[11px] bg-blue-50 text-blue-600 border border-blue-200 px-1.5 py-0.5 rounded font-semibold">꿀팁</span>
+                    ) : post.category === 'econ' ? (
+                      <span className="text-[11px] bg-emerald-50 text-emerald-700 border border-emerald-200 px-1.5 py-0.5 rounded font-semibold">경제</span>
                     ) : (
                       <span className="text-[11px] bg-orange-50 text-orange-600 border border-orange-200 px-1.5 py-0.5 rounded font-semibold">이슈</span>
                     )}
