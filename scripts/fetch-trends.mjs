@@ -46,27 +46,39 @@ const HOWTO_QUERIES = [
   '보험금 청구', '실업급여 신청', '부동산 취득세', '소액 소송 신청',
 ]
 
-async function fetchHowtoNews() {
+// 경제·주식·부동산 글감용 검색어 (고RPM, 매일 1편 고정)
+const ECON_QUERIES = [
+  '코스피 코스닥 마감', '삼성전자 SK하이닉스 주가', '반도체 주가 전망',
+  '증시 급등 급락', '환율 원달러', '금리 인상 인하',
+  '부동산 시세 전망', '2차전지 주가', '미국 증시 나스닥',
+]
+
+// 구글 뉴스 RSS로 쿼리별 최신 기사 수집 (공통 함수)
+async function fetchNews(queries, perQuery = 3) {
   const out = []
-  for (const q of HOWTO_QUERIES) {
+  for (const q of queries) {
     try {
       const url = `https://news.google.com/rss/search?q=${encodeURIComponent(q)}&hl=ko&gl=KR&ceid=KR:ko`
       const res = await fetch(url)
       if (!res.ok) continue
       const xml = await res.text()
-      const items = (xml.match(/<item>[\s\S]*?<\/item>/g) || []).slice(0, 3)
+      const items = (xml.match(/<item>[\s\S]*?<\/item>/g) || []).slice(0, perQuery)
       for (const it of items) {
         out.push({ query: q, title: tag(it, 'title'), url: tag(it, 'link'), source: tag(it, 'source') })
       }
-      await new Promise(r => setTimeout(r, 300))
+      await new Promise(r => setTimeout(r, 250))
     } catch { /* skip */ }
   }
   return out
 }
 
 async function run() {
-  const [viral, howto] = await Promise.all([fetchViral(), fetchHowtoNews()])
-  process.stdout.write(JSON.stringify({ viral, howto }, null, 2))
+  const [viral, howto, econ] = await Promise.all([
+    fetchViral(),
+    fetchNews(HOWTO_QUERIES),
+    fetchNews(ECON_QUERIES),
+  ])
+  process.stdout.write(JSON.stringify({ viral, howto, econ }, null, 2))
 }
 
 run()
