@@ -86,7 +86,6 @@ function emailHtml(post, unsubUrl) {
       <p style="margin:28px 0 8px">
         <a href="${url}" style="background:#03c75a;color:#fff;text-decoration:none;font-weight:700;font-size:16px;padding:14px 28px;border-radius:10px;display:inline-block">전문 이어 읽기 →</a>
       </p>
-      <p style="font-size:13px;color:#b0bab3;margin:8px 0 0">이 메일은 요약본이에요. 표·자가진단·FAQ 등 전체 내용은 위 버튼에서 확인하세요.</p>
       <hr style="border:none;border-top:1px solid #eee;margin:32px 0 16px">
       <p style="font-size:12px;color:#9aa79f;line-height:1.7">
         생활·경제 꿀팁과 화제글을 모아, 모아봄 · <a href="${SITE}" style="color:#03c75a">moabom.net</a><br>
