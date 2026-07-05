@@ -104,9 +104,24 @@ if [ -n "${PEXELS_API_KEY:-}" ]; then
   node scripts/inject-images.mjs || echo "이미지 삽입 경고 (계속)"
 fi
 
+# 6-1. 카드뉴스 렌더 (작가가 cards/<slug>.json 을 남겼을 때만)
+#      스레드 캐러셀용 PNG → public/cards/<slug>/  (배포 후 스레드가 URL로 읽어감)
+CARD_SLUG=""
+CARD_SPEC=$(git ls-files --others --exclude-standard cards/ 2>/dev/null | grep '\.json$' | head -1 || true)
+if [ -n "$CARD_SPEC" ]; then
+  echo "[카드] 카드뉴스 렌더: $CARD_SPEC"
+  if node scripts/render-cards.mjs "$CARD_SPEC"; then
+    CARD_SLUG=$(node -e "process.stdout.write(require('./$CARD_SPEC').slug)" 2>/dev/null || true)
+  else
+    echo "카드 렌더 실패 (글 발행은 계속)"
+  fi
+fi
+
 # 7. 커밋 & 푸시 (변경 없으면 건너뜀, 원격 앞서면 재시도)
 echo "[git] 커밋 & 푸시..."
 git add posts/
+[ -d cards ] && git add cards/
+[ -d public/cards ] && git add public/cards/
 if git diff --cached --quiet; then
   echo "커밋할 변경 없음 — 종료"
   exit 0
@@ -121,3 +136,32 @@ if ! git push --quiet origin main; then
 fi
 
 echo "[$(date '+%Y-%m-%d %H:%M:%S')] 자동 발행 완료 — Vercel이 곧 배포합니다"
+
+# 8. 카드뉴스 SNS 자동 게시 (카드가 렌더됐고, 해당 SNS 토큰이 있을 때만)
+#    이미지를 SNS가 URL로 읽어가므로 배포 완료(이미지 URL 200)를 먼저 폴링.
+HAS_THREADS=$([ -n "${THREADS_USER_ID:-}" ] && [ -n "${THREADS_TOKEN:-}" ] && echo 1 || echo 0)
+HAS_IG=$([ -n "${IG_USER_ID:-}" ] && [ -n "${IG_TOKEN:-}" ] && echo 1 || echo 0)
+
+if [ -n "$CARD_SLUG" ] && { [ "$HAS_THREADS" = 1 ] || [ "$HAS_IG" = 1 ]; }; then
+  IMG_URL="https://moabom.net/cards/${CARD_SLUG}/1.png"
+  echo "[SNS] Vercel 배포 대기: $IMG_URL"
+  DEPLOYED=0
+  for _ in $(seq 1 40); do   # 최대 ~10분 (15초 간격)
+    if curl -fsI "$IMG_URL" >/dev/null 2>&1; then DEPLOYED=1; break; fi
+    sleep 15
+  done
+  if [ "$DEPLOYED" = "1" ]; then
+    echo "[SNS] 배포 확인 — 카드뉴스 게시..."
+    [ "$HAS_THREADS" = 1 ] && { node scripts/threads-publish.mjs "$CARD_SLUG" || echo "스레드 게시 실패 (글은 정상 발행됨)"; }
+    [ "$HAS_IG" = 1 ] && { node scripts/instagram-publish.mjs "$CARD_SLUG" || echo "인스타 게시 실패 (글은 정상 발행됨)"; }
+  else
+    echo "[SNS] 배포 확인 타임아웃 — 게시 건너뜀 ($CARD_SLUG)"
+  fi
+fi
+
+# 9. 이메일 뉴스레터 발송 (DATABASE_URL·RESEND_API_KEY 있을 때만)
+#    새 글을 확인된 구독자에게 발송. 최초 실행은 기존 글 시드만 함.
+if [ -n "${DATABASE_URL:-}" ] && [ -n "${RESEND_API_KEY:-}" ]; then
+  echo "[뉴스레터] 구독자 발송 확인..."
+  node scripts/send-newsletter.mjs || echo "뉴스레터 발송 경고 (글은 정상 발행됨)"
+fi
