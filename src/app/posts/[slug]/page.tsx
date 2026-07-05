@@ -8,6 +8,7 @@ import Link from 'next/link'
 import type { Metadata } from 'next'
 import { SITE } from '@/lib/site'
 import { CoupangBanner } from '@/components/CoupangBanner'
+import { SubscribeBox } from '@/components/SubscribeBox'
 import { YouTube } from '@/components/mdx/YouTube'
 
 const mdxComponents = { YouTube }
@@ -211,6 +212,11 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
             <p className="text-[11px] text-gray-400 mt-4 leading-relaxed">
               이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.
             </p>
+          </div>
+
+          {/* 이메일 구독 */}
+          <div className="mb-3">
+            <SubscribeBox />
           </div>
 
           {/* 관련 글 */}

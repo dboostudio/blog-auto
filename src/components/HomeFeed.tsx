@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { formatDistanceToNow } from 'date-fns'
 import { ko } from 'date-fns/locale'
 import type { PostMeta } from '@/lib/posts'
+import { SubscribeBox } from '@/components/SubscribeBox'
 
 // 카테고리 → 매칭 키워드 (태그/제목에 포함되면 해당 카테고리로 분류)
 const CATEGORY_FILTERS: { label: string; match: (p: PostMeta) => boolean }[] = [
@@ -194,6 +195,9 @@ export function HomeFeed({ posts }: { posts: PostMeta[] }) {
 
         {/* 사이드바 */}
         <aside className="w-[280px] shrink-0 hidden lg:block">
+          <div className="mb-3">
+            <SubscribeBox compact />
+          </div>
           <div className="bg-white rounded-lg mb-3 shadow-sm border border-[#e8e8e8]">
             <div className="px-4 py-3 border-b-2 border-[#03c75a]">
               <h3 className="text-base font-bold text-gray-900">최신 글</h3>

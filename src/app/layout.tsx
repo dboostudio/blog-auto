@@ -18,7 +18,10 @@ export const metadata: Metadata = {
   description: SITE.description,
   applicationName: SITE.name,
   keywords: ['해외토픽', '황당뉴스', '생활꿀팁', '레시피', '해외뉴스'],
-  alternates: { canonical: '/' },
+  alternates: {
+    canonical: '/',
+    types: { 'application/rss+xml': '/feed.xml' },
+  },
   openGraph: {
     type: 'website',
     siteName: SITE.name,

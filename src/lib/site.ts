@@ -9,6 +9,12 @@ export const SITE = {
   locale: 'ko_KR',
 }
 
+// 뉴스레터(Buttondown) 구독 설정
+// username은 Buttondown 계정 생성 후 채운다. 비어 있으면 구독 박스는 렌더되지 않는다.
+export const NEWSLETTER = {
+  buttondownUsername: process.env.NEXT_PUBLIC_BUTTONDOWN_USERNAME || 'dboostudio',
+}
+
 // 쿠팡 파트너스 다이나믹 배너 설정
 export const COUPANG = {
   id: 1000897,
