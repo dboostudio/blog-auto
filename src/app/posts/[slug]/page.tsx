@@ -161,9 +161,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
             <div className="flex items-center gap-3 pb-4 border-b border-[#f0f0f0] text-xs text-gray-500">
               <span>모아봄</span>
               <span>·</span>
-              <span>{format(new Date(meta.published || meta.date), 'yyyy.MM.dd HH:mm')}</span>
-              <span>·</span>
-              <span>{formatDistanceToNow(new Date(meta.published || meta.date), { addSuffix: true, locale: ko })}</span>
+              <span>{format(new Date(meta.published || meta.date), 'yyyy.MM.dd')}</span>
             </div>
 
             {/* 커버 이미지 */}
