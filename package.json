@@ -13,6 +13,7 @@
     "@neondatabase/serverless": "^1.1.0",
     "@tailwindcss/typography": "^0.5.20",
     "date-fns": "^4.4.0",
+    "google-auth-library": "^10.9.0",
     "gray-matter": "^4.0.3",
     "next": "16.2.9",
     "next-mdx-remote": "^6.0.0",
