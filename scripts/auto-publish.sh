@@ -165,3 +165,10 @@ if [ -n "${DATABASE_URL:-}" ] && [ -n "${RESEND_API_KEY:-}" ]; then
   echo "[뉴스레터] 구독자 발송 확인..."
   node scripts/send-newsletter.mjs || echo "뉴스레터 발송 경고 (글은 정상 발행됨)"
 fi
+
+# 10. 스레드 텍스트 게시 (백링크용, THREADS 토큰·DATABASE_URL 있을 때만)
+#     새 글을 후킹+요약+링크로 게시. 최초 실행은 기존 글 시드만 함.
+if [ -n "${THREADS_USER_ID:-}" ] && [ -n "${THREADS_TOKEN:-}" ] && [ -n "${DATABASE_URL:-}" ]; then
+  echo "[스레드] 새 글 텍스트 게시 확인..."
+  node scripts/threads-post.mjs || echo "스레드 게시 경고 (글은 정상 발행됨)"
+fi
