@@ -120,6 +120,7 @@ fi
 # 7. 커밋 & 푸시 (변경 없으면 건너뜀, 원격 앞서면 재시도)
 echo "[git] 커밋 & 푸시..."
 git add posts/
+git add scripts/priority-topics.json 2>/dev/null || true
 [ -d cards ] && git add cards/
 [ -d public/cards ] && git add public/cards/
 if git diff --cached --quiet; then
