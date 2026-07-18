@@ -1,10 +1,8 @@
 [
-  { "topic": "근로장려금·자녀장려금 지급일·금액·지급조회 방법 (2026)", "category": "econ", "priority": 3, "why": "8월 말 정기 지급 — '언제 지급/얼마' 검색 폭증 임박" },
   { "topic": "재산세 조회·납부 방법과 납부기간 (주택 1기분)", "category": "econ", "priority": 2, "why": "7월 말 납부 마감 임박" },
   { "topic": "부가가치세 1기 확정신고 방법·기간 (개인사업자)", "category": "econ", "priority": 2, "why": "7월 25일경 신고 마감 임박" },
   { "topic": "여름 전기요금 계산·에어컨 누진세, 에너지캐시백 신청법", "category": "econ", "priority": 2, "why": "폭염철 전기요금 검색 급증" },
   { "topic": "주민세 납부 방법·금액·납부기간 (균등분)", "category": "econ", "priority": 1, "why": "8월 납부" },
-  { "topic": "여권 재발급 방법·기간·비용·준비물", "category": "howto", "priority": 2, "why": "여름 휴가 출국 러시" },
   { "topic": "해외여행 면세 한도와 여행자 휴대품 자진신고 방법", "category": "howto", "priority": 1, "why": "휴가철 출입국 급증" },
   { "topic": "국민연금 예상수령액 조회하는 법 (내연금 알아보기)", "category": "econ", "priority": 1, "why": "에버그린 고검색" },
   { "topic": "건강보험료 계산·조회 방법 (지역·직장 가입자)", "category": "econ", "priority": 1, "why": "에버그린 고검색" },
