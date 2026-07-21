@@ -17,6 +17,7 @@ export interface PostMeta {
   cover_image?: string
   cover_image_credit?: string
   source_url?: string
+  noindex?: boolean   // true면 색인 제외(얇은/수명 끝난 글) — sitemap·robots에서 제외
   affiliate_products?: AffiliateProduct[]
 }
 

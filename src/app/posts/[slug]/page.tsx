@@ -50,6 +50,8 @@ export async function generateMetadata(
     description: meta.description,
     keywords: meta.tags,
     alternates: { canonical: `/posts/${slug}` },
+    // 얇은/수명 끝난 글은 색인 제외(링크는 따라가게 follow 유지)
+    ...(meta.noindex ? { robots: { index: false, follow: true } } : {}),
     openGraph: {
       type: 'article',
       title: meta.title,

@@ -3,7 +3,7 @@ import { getAllPosts } from '@/lib/posts'
 import { SITE } from '@/lib/site'
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const posts = getAllPosts().map(post => ({
+  const posts = getAllPosts().filter(p => !p.noindex).map(post => ({
     url: `${SITE.url}/posts/${post.slug}`,
     lastModified: new Date(post.date),
     changeFrequency: 'weekly' as const,
