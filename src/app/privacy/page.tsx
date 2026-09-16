@@ -35,6 +35,12 @@ export default function PrivacyPage() {
           제3자 공급업체의 쿠키 사용을 거부할 수 있습니다.
         </li>
         <li>
+          <strong>Google Analytics</strong> — 사이트는 방문·이용 통계(어떤 페이지를 얼마나 보는지 등)를 파악하기 위해
+          Google Analytics를 사용하며, 이 과정에서 쿠키를 통해 비식별 이용 정보가 Google에 전송될 수 있습니다. 이용자는{' '}
+          <a href="https://tools.google.com/dlpage/gaoptout" target="_blank" rel="noopener noreferrer">Google Analytics 차단 부가기능</a>으로
+          수집을 거부할 수 있습니다.
+        </li>
+        <li>
           <strong>쿠팡 파트너스</strong> — 사이트는 쿠팡 파트너스 활동의 일환으로 일정액의 수수료를 제공받으며,
           제휴 링크 클릭 시 쿠팡의 쿠키 정책이 적용됩니다.
         </li>

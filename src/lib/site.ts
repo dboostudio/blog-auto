@@ -9,6 +9,11 @@ export const SITE = {
   locale: 'ko_KR',
 }
 
+// Google Analytics 4 (측정 ID는 공개값. 필요 시 NEXT_PUBLIC_GA_ID로 덮어쓰기)
+export const ANALYTICS = {
+  gaId: process.env.NEXT_PUBLIC_GA_ID || 'G-1YHS7E2GBB',
+}
+
 // 쿠팡 파트너스 다이나믹 배너 설정
 export const COUPANG = {
   id: 1000897,
